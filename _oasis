@@ -1,0 +1,31 @@
+# vim: filetype=yaml:tabstop=2:softtabstop=2:shiftwidth=2:
+
+OASISFormat : 0.4
+Name        : mail_thief
+Version     : 0.0.0
+Synopsis    : Fake SMTP server for testing environments - steals all the mail.
+Authors     : Siraaj Khandkar <siraaj@khandkar.net>
+License     : MIT
+Plugins     : META (0.4)
+            , DevFiles (0.4)
+
+Executable mail_thief
+  Path           : src/bin
+  BuildTools     : ocamlbuild
+  MainIs         : mail_thief.ml
+  CompiledObject : native
+  builddepends   : threads
+                 , core
+                 , async
+                 , async_smtp
+
+Executable mail_thief_test
+  Path           : test
+  BuildTools     : ocamlbuild
+  MainIs         : mail_thief_test.ml
+  CompiledObject : native
+  builddepends   : threads
+                 , core
+                 , async
+                 , async_smtp
+                 , caravan
