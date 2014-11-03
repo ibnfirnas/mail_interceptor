@@ -1,0 +1,11 @@
+# Whole directories
+_build/
+
+# Individual files
+_tags
+configure
+mail_thief.native
+mail_thief_test.native
+setup.data
+setup.log
+setup.ml
