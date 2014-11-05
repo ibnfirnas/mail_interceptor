@@ -42,3 +42,4 @@ Library mail_db
                  , core
                  , async
                  , async_shell
+                 , cryptokit

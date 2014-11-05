@@ -1,4 +1,4 @@
-PKG core async async_smtp async_shell email_message
+PKG core async async_smtp async_shell email_message cryptokit
 
 S src/bin
 S src/lib/mail_db
