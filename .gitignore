@@ -5,8 +5,8 @@ data/
 # Individual files
 _tags
 configure
-mail_thief.native
-mail_thief_test.native
+mail_interceptor.native
+mail_interceptor_test.native
 setup.data
 setup.log
 setup.ml
