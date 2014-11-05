@@ -1,0 +1,7 @@
+PKG core async async_smtp async_shell email_message
+
+S src/bin
+S src/lib/mail_db
+
+B _build/src/bin
+B _build/src/lib/mail_db

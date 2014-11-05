@@ -1,5 +1,6 @@
 # Whole directories
 _build/
+data/
 
 # Individual files
 _tags
@@ -9,3 +10,6 @@ mail_thief_test.native
 setup.data
 setup.log
 setup.ml
+src/lib/mail_db/META
+src/lib/mail_db/mail_db.mldylib
+src/lib/mail_db/mail_db.mllib

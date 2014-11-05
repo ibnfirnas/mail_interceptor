@@ -18,6 +18,7 @@ Executable mail_thief
                  , core
                  , async
                  , async_smtp
+                 , mail_db
 
 Executable mail_thief_test
   Path           : test
@@ -29,3 +30,15 @@ Executable mail_thief_test
                  , async
                  , async_smtp
                  , caravan
+
+Library mail_db
+  Path           : ./src/lib/mail_db
+  FindlibName    : mail_db
+  Install        : false
+  Modules        : Mail_db
+  BuildTools     : ocamlbuild
+  CompiledObject : native
+  BuildDepends   : threads
+                 , core
+                 , async
+                 , async_shell
