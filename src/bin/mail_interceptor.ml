@@ -22,7 +22,7 @@ end = struct
       workers
 end
 
-let main ~directory ~port ~log_level =
+let main ~directory ~port ~log_level ~release_parent =
   Log.Global.set_level log_level;
   Log.Global.set_output [Log.Output.stderr ()];
   let smtp_msgs_r, smtp_msgs_w = Pipe.create () in
@@ -58,6 +58,7 @@ let main ~directory ~port ~log_level =
     >>= fun _address ->
     Deferred.never ()
   in
+  release_parent ();
   Supervisor.run
     [ worker_storer
     ; worker_server
@@ -75,9 +76,17 @@ let () =
         ~doc:" TCP port to listen on. Default: 2525"
     + flag "--log-level" (optional_with_default "Info" string)
         ~doc:" Log level [Debug | Info | Error]. Default: Info"
+    + flag "--daemonize" no_arg
+        ~doc:" Shall we daemonize? Default: no"
     )
-    ( fun directory port log_level () ->
+    ( fun directory port log_level daemonize () ->
         let log_level = Log.Level.of_string log_level in
-        main ~directory ~port ~log_level
+        let release_parent =
+          if daemonize then
+            Staged.unstage (Daemon.daemonize_wait ~cd:directory ())
+          else
+            fun () -> ()
+        in
+        main ~directory ~port ~log_level ~release_parent
     )
   )
