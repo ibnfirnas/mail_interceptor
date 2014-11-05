@@ -32,6 +32,7 @@ let main ~directory ~port ~log_level =
     let store_smtp_msg (_sender, receivers, _email_id, email_msg) =
       let msg = Email_message.Email.to_string email_msg in
       Deferred.List.iter receivers ~how:`Parallel ~f:(fun receiver ->
+        Log.Global.debug "Storing messsage for receiver: %s" receiver;
         let receiver = receiver
           |> String.lstrip ~drop:((=) '<')
           |> String.rstrip ~drop:((=) '>')
