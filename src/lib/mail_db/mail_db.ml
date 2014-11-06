@@ -6,14 +6,24 @@ type t =
   ; dir_mailboxes : string
   }
 
-let ensure_directories {dir_messages; dir_mailboxes} =
-  Async_shell.mkdir ~p:() dir_messages >>= fun () ->
-  Async_shell.mkdir ~p:() dir_mailboxes
-
 let digest_of_string s =
   let hash      = Cryptokit.Hash.sha3 256 in
   let transform = Cryptokit.Hexa.encode () in
   Cryptokit.transform_string transform (Cryptokit.hash_string hash s)
+
+let file_append_line ~dir ~filename ~data =
+  Async_shell.mkdir ~p:() dir
+  >>= fun () ->
+  File_writer.create ~append:true (dir ^/ filename)
+  >>= fun file_manifest ->
+  File_writer.write file_manifest data;
+  File_writer.write file_manifest "\n";
+  File_writer.close file_manifest
+
+let file_overwrite ~dir ~filename ~data =
+  Async_shell.mkdir ~p:() dir
+  >>= fun () ->
+  Writer.save (dir ^/ filename) ~contents:data
 
 let init ~directory:root =
   let subdir_messages  = "messages" in
@@ -25,16 +35,7 @@ let init ~directory:root =
   in
   return t
 
-let store ({dir_messages; dir_mailboxes} as t) ~receiver ~msg =
+let store {dir_messages; dir_mailboxes} ~receiver ~msg =
   let msg_digest = digest_of_string msg in
-  let path_to_msg      = dir_messages  ^/ msg_digest in
-  let path_to_manifest = dir_mailboxes ^/ receiver in
-  ensure_directories t
-  >>= fun () ->
-  Writer.save path_to_msg ~contents:msg
-  >>= fun () ->
-  File_writer.create ~append:true path_to_manifest
-  >>= fun file_manifest ->
-  File_writer.write file_manifest msg_digest;
-  File_writer.write file_manifest "\n";
-  File_writer.close file_manifest
+  file_overwrite   ~dir:dir_messages  ~filename:msg_digest ~data:msg >>= fun () ->
+  file_append_line ~dir:dir_mailboxes ~filename:receiver   ~data:msg_digest
