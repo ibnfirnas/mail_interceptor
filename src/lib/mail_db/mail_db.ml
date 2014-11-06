@@ -25,9 +25,10 @@ let file_overwrite ~dir ~filename ~data =
   >>= fun () ->
   Writer.save (dir ^/ filename) ~contents:data
 
+let subdir_messages  = "messages"
+let subdir_mailboxes = "mailboxes"
+
 let init ~directory:root =
-  let subdir_messages  = "messages" in
-  let subdir_mailboxes = "mailboxes" in
   let t =
     { dir_messages  = root ^/ subdir_messages
     ; dir_mailboxes = root ^/ subdir_mailboxes
@@ -36,6 +37,16 @@ let init ~directory:root =
   return t
 
 let store {dir_messages; dir_mailboxes} ~receiver ~msg =
+  let receiver_dot_html = receiver ^ ".html" in
   let msg_digest = digest_of_string msg in
+  let msg_digest_html =
+    sprintf
+      "<li><a href=\"/%s/%s\">%s</a></li>"
+      subdir_messages
+      msg_digest
+      msg_digest
+  in
   file_overwrite   ~dir:dir_messages  ~filename:msg_digest ~data:msg >>= fun () ->
   file_append_line ~dir:dir_mailboxes ~filename:receiver   ~data:msg_digest
+  >>= fun () ->
+  file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_html ~data:msg_digest_html
