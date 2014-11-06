@@ -46,7 +46,8 @@ let store {dir_messages; dir_mailboxes} ~receiver ~msg =
       msg_digest
       msg_digest
   in
-  file_overwrite   ~dir:dir_messages  ~filename:msg_digest ~data:msg >>= fun () ->
-  file_append_line ~dir:dir_mailboxes ~filename:receiver   ~data:msg_digest
+  file_overwrite   ~dir:dir_messages  ~filename:msg_digest        ~data:msg
+  >>= fun () ->
+  file_append_line ~dir:dir_mailboxes ~filename:receiver          ~data:msg_digest
   >>= fun () ->
   file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_html ~data:msg_digest_html
