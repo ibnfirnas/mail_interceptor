@@ -6,8 +6,6 @@ type t =
   ; dir_mailboxes : string
   }
 
-let ( / ) = Filename.concat
-
 let ensure_directories {dir_messages; dir_mailboxes} =
   Async_shell.mkdir ~p:() dir_messages >>= fun () ->
   Async_shell.mkdir ~p:() dir_mailboxes
@@ -21,16 +19,16 @@ let init ~directory:root =
   let subdir_messages  = "messages" in
   let subdir_mailboxes = "mailboxes" in
   let t =
-    { dir_messages  = root / subdir_messages
-    ; dir_mailboxes = root / subdir_mailboxes
+    { dir_messages  = root ^/ subdir_messages
+    ; dir_mailboxes = root ^/ subdir_mailboxes
     }
   in
   return t
 
 let store ({dir_messages; dir_mailboxes} as t) ~receiver ~msg =
   let msg_digest = digest_of_string msg in
-  let path_to_msg      = dir_messages  / msg_digest in
-  let path_to_manifest = dir_mailboxes / receiver in
+  let path_to_msg      = dir_messages  ^/ msg_digest in
+  let path_to_manifest = dir_mailboxes ^/ receiver in
   ensure_directories t
   >>= fun () ->
   Writer.save path_to_msg ~contents:msg
