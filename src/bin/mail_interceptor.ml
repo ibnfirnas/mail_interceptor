@@ -23,8 +23,15 @@ end = struct
 end
 
 let main ~directory ~port ~log_level ~release_parent =
+  let log_dir_path  = directory    ^/ "log" in
+  let log_file_path = log_dir_path ^/ "console.log" in
+  Async_shell.mkdir ~p:() log_dir_path
+  >>= fun () ->
   Log.Global.set_level log_level;
-  Log.Global.set_output [Log.Output.stderr ()];
+  Log.Global.set_output
+    [ Log.Output.stderr ()
+    ; Log.Output.file `Text ~filename:log_file_path
+    ];
   let smtp_msgs_r, smtp_msgs_w = Pipe.create () in
   Mail_db.init ~directory
   >>= fun db ->
