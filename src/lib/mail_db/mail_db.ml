@@ -37,6 +37,7 @@ let init ~directory:root =
   return t
 
 let store {dir_messages; dir_mailboxes} ~receiver ~msg =
+  let receiver_dot_dat  = receiver ^ ".dat" in
   let receiver_dot_html = receiver ^ ".html" in
   let msg_digest = digest_of_string msg in
   let msg_digest_html =
@@ -48,6 +49,6 @@ let store {dir_messages; dir_mailboxes} ~receiver ~msg =
   in
   file_overwrite   ~dir:dir_messages  ~filename:msg_digest        ~data:msg
   >>= fun () ->
-  file_append_line ~dir:dir_mailboxes ~filename:receiver          ~data:msg_digest
+  file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_dat  ~data:msg_digest
   >>= fun () ->
   file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_html ~data:msg_digest_html
