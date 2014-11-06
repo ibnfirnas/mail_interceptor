@@ -32,9 +32,9 @@ let main ~directory ~port ~log_level ~release_parent =
     [ Log.Output.stderr ()
     ; Log.Output.file `Text ~filename:log_file_path
     ];
-  let smtp_msgs_r, smtp_msgs_w = Pipe.create () in
   Mail_db.init ~directory
   >>= fun db ->
+  let smtp_msgs_r, smtp_msgs_w = Pipe.create () in
   let worker_storer () =
     let store_smtp_msg (_sender, receivers, _email_id, email_msg) =
       let msg = Email_message.Email.to_string email_msg in
