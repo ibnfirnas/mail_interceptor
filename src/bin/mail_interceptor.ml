@@ -36,8 +36,8 @@ let main ~directory ~port ~log_level ~release_parent =
   >>= fun db ->
   let smtp_msgs_r, smtp_msgs_w = Pipe.create () in
   let worker_storer () =
-    let store_smtp_msg (_sender, receivers, _email_id, email_msg) =
-      let msg = Email_message.Email.to_string email_msg in
+    let store_smtp_msg (time, (_sender, receivers, _email_id, email_msg)) =
+      let msg = Mail_db_msg.cons ~time ~email_msg in
       Deferred.List.iter receivers ~how:`Parallel ~f:(fun receiver ->
         Log.Global.debug "Storing messsage for receiver: %s" receiver;
         let receiver = receiver
@@ -52,7 +52,7 @@ let main ~directory ~port ~log_level ~release_parent =
   let worker_server () =
     let router ~addr ~r ~w =
       let routing_rule smtp_msg =
-        Pipe.write_without_pushback smtp_msgs_w smtp_msg;
+        Pipe.write_without_pushback smtp_msgs_w (Time.now (), smtp_msg);
         None
       in
       Smtp.Router.rules_server [] [routing_rule] addr r w

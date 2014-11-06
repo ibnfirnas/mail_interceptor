@@ -40,6 +40,8 @@ Library mail_db
   CompiledObject : native
   BuildDepends   : threads
                  , core
+                 , core_extended
                  , async
                  , async_shell
                  , cryptokit
+                 , email_message

@@ -1,6 +1,8 @@
 open Core.Std
 open Async.Std
 
+module Csv_writer = Core_extended.Std.Csv_writer
+
 type t =
   { dir_messages  : string
   ; dir_mailboxes : string
@@ -37,18 +39,22 @@ let init ~directory:root =
   return t
 
 let store {dir_messages; dir_mailboxes} ~receiver ~msg =
-  let receiver_dot_dat  = receiver ^ ".dat" in
+  let {Mail_db_msg.time; raw=msg_raw} = msg in
+  let time = Time.to_string time in
+  let receiver_dot_csv  = receiver ^ ".csv" in
   let receiver_dot_html = receiver ^ ".html" in
-  let msg_digest = digest_of_string msg in
-  let msg_digest_html =
+  let msg_digest = digest_of_string msg_raw in
+  let msg_meta_csv = Csv_writer.line_to_string ~sep:'|' [time; msg_digest] in
+  let msg_meta_html =
     sprintf
-      "<li><a href=\"/%s/%s\">%s</a></li>"
+      "<li>%s <a href=\"/%s/%s\">%s</a></li>"
+      time
       subdir_messages
       msg_digest
       msg_digest
   in
-  file_overwrite   ~dir:dir_messages  ~filename:msg_digest        ~data:msg
+  file_overwrite   ~dir:dir_messages  ~filename:msg_digest        ~data:msg_raw
   >>= fun () ->
-  file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_dat  ~data:msg_digest
+  file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_csv  ~data:msg_meta_csv
   >>= fun () ->
-  file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_html ~data:msg_digest_html
+  file_append_line ~dir:dir_mailboxes ~filename:receiver_dot_html ~data:msg_meta_html
