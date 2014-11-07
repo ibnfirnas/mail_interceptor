@@ -9,6 +9,8 @@ License     : MIT
 Plugins     : META (0.4)
             , DevFiles (0.4)
 
+XDevFilesEnableMakefile : false
+
 Executable mail_interceptor
   Path           : src/bin
   BuildTools     : ocamlbuild

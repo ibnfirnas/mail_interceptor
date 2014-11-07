@@ -1,7 +1,18 @@
-# OASIS_START
-# DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
+.PHONY: \
+	all \
+	build \
+	clean \
+	configure \
+	distclean \
+	doc \
+	install \
+	reinstall \
+	test \
+	uninstall
 
-SETUP = ocaml setup.ml
+
+SETUP := ocaml setup.ml
+
 
 build: setup.data
 	$(SETUP) -build $(BUILDFLAGS)
@@ -35,7 +46,3 @@ setup.data:
 
 configure:
 	$(SETUP) -configure $(CONFIGUREFLAGS)
-
-.PHONY: build doc test all install uninstall reinstall clean distclean configure
-
-# OASIS_STOP
