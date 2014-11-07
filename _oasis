@@ -23,6 +23,7 @@ Executable mail_interceptor
                  , mail_db
 
 Executable mail_interceptor_test
+  Install        : false
   Path           : test
   BuildTools     : ocamlbuild
   MainIs         : mail_interceptor_test.ml
@@ -47,3 +48,6 @@ Library mail_db
                  , async_shell
                  , cryptokit
                  , email_message
+
+Test sanity_check
+  Command : ./mail_interceptor_test.native
