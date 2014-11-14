@@ -21,6 +21,7 @@ Executable mail_interceptor
                  , async
                  , async_smtp
                  , mail_db
+                 , supervisor
 
 Executable mail_interceptor_test
   Install        : false
@@ -48,6 +49,17 @@ Library mail_db
                  , async_shell
                  , cryptokit
                  , email_message
+
+Library supervisor
+  Path           : ./src/lib/supervisor
+  FindlibName    : supervisor
+  Install        : false
+  Modules        : Supervisor
+  BuildTools     : ocamlbuild
+  CompiledObject : native
+  BuildDepends   : threads
+                 , core
+                 , async
 
 Test sanity_check
   Command : ./mail_interceptor_test.native

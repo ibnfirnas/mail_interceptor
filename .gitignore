@@ -13,3 +13,6 @@ setup.ml
 src/lib/mail_db/META
 src/lib/mail_db/mail_db.mldylib
 src/lib/mail_db/mail_db.mllib
+src/lib/supervisor/META
+src/lib/supervisor/supervisor.mldylib
+src/lib/supervisor/supervisor.mllib

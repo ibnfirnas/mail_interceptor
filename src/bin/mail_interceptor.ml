@@ -3,25 +3,6 @@ open Async.Std
 
 module Smtp = Async_smtp.Smtp
 
-module Supervisor : sig
-  val run : (unit -> unit Deferred.t) list -> unit Deferred.t
-end = struct
-  let rec restart_on_exn f =
-    Log.Global.debug "Supervisor running child.";
-    try_with f >>= function
-    | Ok () ->
-        return ()
-    | Error e ->
-        Log.Global.error "Supervisor caught failure: %s" (Exn.to_string e);
-        restart_on_exn f
-
-  let run workers =
-    Deferred.List.iter
-      ~how:`Parallel
-      ~f:restart_on_exn
-      workers
-end
-
 let worker_storer ~smtp_msgs_r ~db () =
   let store_smtp_msg (time, (_sender, receivers, _email_id, email_msg)) =
     let msg = Mail_db_msg.cons ~time ~email_msg in
