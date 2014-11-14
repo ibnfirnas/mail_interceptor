@@ -49,3 +49,15 @@ setup.ml:
 
 configure:
 	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+deps:
+	@opam install --yes \
+		async \
+		async_shell \
+		async_smtp \
+		caravan \
+		core \
+		core_extended \
+		cryptokit \
+		email_message \
+		oasis
