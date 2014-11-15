@@ -19,9 +19,7 @@ Executable mail_interceptor
   builddepends   : threads
                  , core
                  , async
-                 , async_smtp
-                 , mail_db
-                 , supervisor
+                 , mail_interceptor
 
 Executable mail_interceptor_test
   Install        : false
@@ -34,6 +32,21 @@ Executable mail_interceptor_test
                  , async
                  , async_smtp
                  , caravan
+
+Library mail_interceptor
+  Path           : ./src/lib/mail_interceptor
+  FindlibName    : mail_interceptor
+  Install        : false
+  Modules        : Mail_interceptor_server
+  BuildTools     : ocamlbuild
+  CompiledObject : native
+  BuildDepends   : threads
+                 , core
+                 , async
+                 , async_shell
+                 , async_smtp
+                 , mail_db
+                 , supervisor
 
 Library mail_db
   Path           : ./src/lib/mail_db
