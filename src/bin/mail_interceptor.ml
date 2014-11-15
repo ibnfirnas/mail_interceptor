@@ -32,9 +32,9 @@ module Spec = struct
     )
 end
 
-let command_start_foreground =
+let command_run_in_foreground =
   Command.async_basic
-    ~summary:"Start server in the foreground."
+    ~summary:"Run server in the foreground."
     Spec.for_start
     ( fun directory port log_level () ->
         Mail_interceptor_server.start
@@ -44,9 +44,9 @@ let command_start_foreground =
           ~release_parent:(fun () -> ())
     )
 
-let command_start_daemon =
+let command_daemon_start =
   Command.async_basic
-    ~summary:"Start server in the background (daemonize)."
+    ~summary:"Start server daemon."
     Spec.for_start
     ( fun directory port log_level () ->
         let release_parent =
@@ -62,8 +62,8 @@ let command_start_daemon =
 let command =
   Command.group
     ~summary:""
-    [ "run"   , command_start_foreground
-    ; "start" , command_start_daemon
+    [ "run"   , command_run_in_foreground
+    ; "start" , command_daemon_start
     ]
 
 let () =
