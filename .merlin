@@ -2,6 +2,10 @@ PKG core core_extended async async_smtp async_shell email_message cryptokit
 
 S src/bin
 S src/lib/mail_db
+S src/lib/mail_interceptor
+S src/lib/supervisor
 
 B _build/src/bin
 B _build/src/lib/mail_db
+B _build/src/lib/mail_interceptor
+B _build/src/lib/supervisor
